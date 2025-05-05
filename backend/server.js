@@ -15,7 +15,7 @@ const announcementRoutes = require('./routes/announcements');
 
 const app = express();
 connectDB();
-
+app.use('/api/users', authRoutes);
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
