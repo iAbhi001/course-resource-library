@@ -22,14 +22,35 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user || !await bcrypt.compare(password, user.password))
-      return res.status(400).json({ msg: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn:'1h' });
+    console.log('[DEBUG] Email:', email);
+    console.log('[DEBUG] Password Input:', password);
+
+    const user = await User.findOne({ email });
+    console.log('[DEBUG] Found User:', user);
+
+    if (!user) {
+      console.log('[DEBUG] No user found for email');
+      return res.status(400).json({ msg: 'Invalid credentials' });
+    }
+
+    console.log('[DEBUG] Stored Hash:', user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log('[DEBUG] Password Match:', isMatch);
+
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token, role: user.role });
-  } catch (err) { next(err); }
+
+  } catch (err) {
+    console.error('[DEBUG] Login Error:', err);
+    next(err);
+  }
 };
+
 
 exports.forgotPassword = async (req, res, next) => {
   try {
