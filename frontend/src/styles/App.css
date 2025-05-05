@@ -1,0 +1,5 @@
+body { font-family: Arial, sans-serif; margin: 20px; }
+.auth-form, form { max-width: 400px; margin: auto; display: flex; flex-direction: column; }
+input, select, textarea, button { margin: 5px 0; padding: 8px; }
+button { cursor: pointer; }
+h1,h2,h3,h4,h5 { margin: 10px 0; }
